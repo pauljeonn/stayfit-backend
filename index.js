@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const exerciseRoute = require('./routes/exercises');
 
 dotenv.config();
 
@@ -9,6 +10,11 @@ mongoose
 	.connect(process.env.MONGO_URL)
 	.then(() => console.log('Connected to MongoDB.'))
 	.catch((err) => console.log(err));
+
+// Middleware
+app.use(express.json()); // request body JSON 변환
+
+app.use('/api/exercises', exerciseRoute);
 
 app.listen(4000, () => {
 	console.log('Backend server is running.');
