@@ -1,7 +1,17 @@
 const router = require('express').Router();
 const Exercise = require('../models/Exercise');
 
-// Exercise 생성
+// 운동 불러오기
+router.get('/', async (req, res) => {
+	try {
+		const exercise = await Exercise.find({ userId: 1 });
+		res.json(exercise);
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+// 운동 생성
 router.post('/', async (req, res) => {
 	console.log(req.body);
 	const newExercise = new Exercise(req.body);
@@ -13,13 +23,14 @@ router.post('/', async (req, res) => {
 	}
 });
 
-// Exercise 불러오기
-router.get('/', async (req, res) => {
+// 운동 수정
+router.put('/:id', async (req, res) => {
 	try {
-		const exercise = await Exercise.find({ userId: 1 });
-		res.json(exercise);
+		const exercise = await Exercise.findById(req.params.id);
+		const editedExercise = await exercise.updateOne({ $set: req.body });
+		res.status(200).json(editedExercise);
 	} catch (err) {
-		console.log(err);
+		res.status(500).json(err);
 	}
 });
 
