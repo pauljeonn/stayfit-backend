@@ -25,8 +25,11 @@ router.post('/', async (req, res) => {
 // 운동 수정
 router.put('/:id', async (req, res) => {
 	try {
-		const exercise = await Exercise.findById(req.params.id);
-		const editedExercise = await exercise.updateOne({ $set: req.body });
+		const editedExercise = await Exercise.findOneAndUpdate(
+			{ _id: req.params.id },
+			{ $set: req.body },
+			{ returnDocument: 'after' }
+		);
 		res.status(200).json(editedExercise);
 	} catch (err) {
 		res.status(500).json(err);
