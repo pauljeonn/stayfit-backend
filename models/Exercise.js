@@ -18,6 +18,10 @@ const ExerciseSchema = new mongoose.Schema(
 			type: Array,
 			default: [],
 		},
+		done: {
+			type: Array,
+			default: [],
+		},
 	},
 	{ timestamps: true }
 );
