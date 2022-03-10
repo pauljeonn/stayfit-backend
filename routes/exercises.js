@@ -47,17 +47,32 @@ router.delete('/:id', async (req, res) => {
 	}
 });
 
-// ADD/REMOVE DONE DATE
+// ADD DONE DATE
 router.put('/:id/done', async (req, res) => {
 	try {
 		const exercise = await Exercise.findById(req.params.id);
-		// Request body에서 받은 날짜가 존재하지 않으면 done에 추가, 존재하면 제거
+		// Request body에서 받은 날짜가 존재하지 않으면 done에 추가
 		if (!exercise.done.includes(req.body.doneDate)) {
 			await exercise.updateOne({ $push: { done: req.body.doneDate } });
 			res.status(200).json(exercise);
 		} else {
+			res.status(400).json('이미 존재하는 날짜입니다.');
+		}
+	} catch (err) {
+		res.status(500).json(err);
+	}
+});
+
+// REMOVE DONE DATE
+router.put('/:id/undo', async (req, res) => {
+	try {
+		const exercise = await Exercise.findById(req.params.id);
+		// Request body에서 받은 날짜가 존재하면 제거
+		if (exercise.done.includes(req.body.doneDate)) {
 			await exercise.updateOne({ $pull: { done: req.body.doneDate } });
 			res.status(200).json(exercise);
+		} else {
+			res.status(400).json('존재하지 않는 날짜입니다.');
 		}
 	} catch (err) {
 		res.status(500).json(err);
